@@ -6,18 +6,16 @@ def enableProguardInReleaseBuilds = true
 def jscFlavor = 'org.webkit:android-jsc:+'
 
 react {
-    /* Folders */
     root = file("../")
     reactNativeDir = file("../node_modules/react-native")
     codegenDir = file("../node_modules/@react-native/codegen")
-
-    /* Enable Hermes */
     hermesEnabled = true
+    entryFile = file("../index.js")
 }
 
 android {
+    compileSdkVersion rootProject.ext.compileSdkVersion
     namespace "com.easytask"
-    compileSdk rootProject.ext.compileSdkVersion
 
     defaultConfig {
         applicationId "com.easytask"
@@ -47,38 +45,36 @@ android {
         }
     }
 
-    // Allow you to configure per-module CPU architectures
-    splits {
-        abi {
-            enable true
-            reset()
-            include "armeabi-v7a", "arm64-v8a", "x86", "x86_64"
-            universalApk true
-        }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions {
+        jvmTarget = "1.8"
     }
 }
 
-configurations.all {
-    resolutionStrategy {
-        force "com.facebook.react:react-native:0.76.1"
-        force "com.facebook.react:hermes-engine:0.76.1"
+allprojects {
+    repositories {
+        google()
+        mavenCentral()
+        jcenter()
     }
 }
 
 dependencies {
-    implementation "com.facebook.react:react-android"
+    implementation("com.facebook.react:react-android:0.76.0") {
+        exclude group: "com.android.support"
+    }
+
     if (hermesEnabled.toBoolean()) {
-        implementation "com.facebook.react:hermes-android"
+        implementation("com.facebook.react:hermes-android:0.76.0")
     }
 
     debugImplementation("com.facebook.flipper:flipper:${FLIPPER_VERSION}")
     debugImplementation("com.facebook.flipper:flipper-network-plugin:${FLIPPER_VERSION}") {
         exclude group:'com.squareup.okhttp3', module:'okhttp'
-    }
-
-    debugImplementation("com.facebook.flipper:flipper-fresco-plugin:${FLIPPER_VERSION}")
-    if (hermesEnabled.toBoolean()) {
-        debugImplementation files("../../node_modules/react-native/third-party/hermes-engine/hermes-debug.aar")
     }
 }
 

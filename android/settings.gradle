@@ -1,7 +1,16 @@
 rootProject.name = 'EasyTask'
 
-apply from: file("../node_modules/@react-native-community/cli-platform-android/native_modules.gradle"); applyNativeModulesSettingsGradle(settings)
+apply from: file("../node_modules/@react-native-community/cli-platform-android/native_modules.gradle")
+applyNativeModulesSettingsGradle(settings)
 
 include ':app'
 
-includeBuild('../node_modules/@react-native/gradle-plugin')
+def pluginPath = file('../node_modules/react-native/gradle-plugin')
+if (pluginPath.exists()) {
+    includeBuild('../node_modules/react-native/gradle-plugin')
+} else {
+    def altPluginPath = file('../node_modules/@react-native/gradle-plugin')
+    if (altPluginPath.exists()) {
+        includeBuild('../node_modules/@react-native/gradle-plugin')
+    }
+}
