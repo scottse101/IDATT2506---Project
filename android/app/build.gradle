@@ -1,9 +1,7 @@
 apply plugin: "com.android.application"
-apply plugin: "org.jetbrains.kotlin.android"
 apply plugin: "com.facebook.react"
 
 def enableProguardInReleaseBuilds = true
-def jscFlavor = 'org.webkit:android-jsc:+'
 
 react {
     root = file("../")
@@ -14,8 +12,8 @@ react {
 }
 
 android {
-    compileSdkVersion rootProject.ext.compileSdkVersion
     namespace "com.easytask"
+    compileSdkVersion rootProject.ext.compileSdkVersion
 
     defaultConfig {
         applicationId "com.easytask"
@@ -23,6 +21,7 @@ android {
         targetSdk rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "1.0"
+        buildConfigField "boolean", "IS_NEW_ARCHITECTURE_ENABLED", "true"
     }
 
     signingConfigs {
@@ -45,39 +44,19 @@ android {
         }
     }
 
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
-
-    kotlinOptions {
-        jvmTarget = "1.8"
-    }
-
     buildFeatures {
         buildConfig true
     }
 }
 
-allprojects {
-    repositories {
-        google()
-        mavenCentral()
-        jcenter()
-    }
-}
-
 dependencies {
-    implementation("com.facebook.react:react-android:0.76.0") {
+    implementation("com.facebook.react:react-android:0.76.1") {
         exclude group: "com.android.support"
     }
 
     if (hermesEnabled.toBoolean()) {
-        implementation("com.facebook.react:hermes-android:0.76.0")
+        implementation("com.facebook.react:hermes-android:0.76.1")
     }
-
-    implementation platform('com.google.firebase:firebase-bom:32.3.1')
-    implementation 'com.google.firebase:firebase-analytics'
 
     debugImplementation("com.facebook.flipper:flipper:${FLIPPER_VERSION}")
     debugImplementation("com.facebook.flipper:flipper-network-plugin:${FLIPPER_VERSION}") {

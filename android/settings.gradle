@@ -4,6 +4,7 @@ apply from: file("../node_modules/@react-native-community/cli-platform-android/n
 applyNativeModulesSettingsGradle(settings)
 
 include ':app'
+includeBuild('../node_modules/@react-native/gradle-plugin')
 
 def pluginPath = file('../node_modules/react-native/gradle-plugin')
 if (pluginPath.exists()) {
